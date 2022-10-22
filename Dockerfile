@@ -1,6 +1,4 @@
-ARG GOLANG_VERSION
-ARG ALPINE_VERSION
-FROM golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} as builder
+FROM golang:1.18.7-alpine3.16 as builder
 
 RUN apk --no-cache --virtual .build-deps add make gcc musl-dev binutils-gold
 
@@ -10,7 +8,7 @@ WORKDIR /app
 RUN make build
 
 
-FROM alpine:${ALPINE_VERSION}
+FROM isaackuang/alpine-base:3.16
 
 LABEL maintainer="community@krakend.io"
 
@@ -27,5 +25,3 @@ WORKDIR /etc/krakend
 
 ENTRYPOINT [ "/usr/bin/krakend" ]
 CMD [ "run", "-c", "/etc/krakend/krakend.json" ]
-
-EXPOSE 8000 8090
